@@ -1,16 +1,11 @@
-// js/map.js
-
-// Set up the map
 const map = L.map('map').setView([22.9734, 78.6569], 5);
 
-// Add tile layer (OpenStreetMap)
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   maxZoom: 7,
   minZoom: 5,
   attribution: '&copy; OpenStreetMap contributors'
 }).addTo(map);
 
-// List of cities with coordinates
 const cities = [
   { name: 'Delhi', lat: 28.7041, lon: 77.1025 },
   { name: 'Mumbai', lat: 19.0760, lon: 72.8777 },
@@ -19,23 +14,19 @@ const cities = [
   { name: 'Bangalore', lat: 12.9716, lon: 77.5946 },
 ];
 
-// For each city, place a marker and add click event
 cities.forEach(city => {
   const marker = L.marker([city.lat, city.lon]).addTo(map);
 
   marker.on('click', () => {
-    const url = `http://api.weatherstack.com/current?access_key=${apiKey}&query=${encodeURIComponent(city.name)}`;
-
-    fetch(url)
+    fetch(`/api/weather?city=${encodeURIComponent(city.name)}`)
       .then(res => res.json())
       .then(data => {
-        if (data.success === false || !data.current) {
-          marker.bindPopup(`<b>${city.name}</b><br>Error: ${data.error?.info || "Weather data not found."}`).openPopup();
+        if (!data.current) {
+          marker.bindPopup(`<b>${city.name}</b><br>Error: ${data.error?.info || "Weather not available"}`).openPopup();
         } else {
           const temp = data.current.temperature;
           const desc = data.current.weather_descriptions[0];
           const icon = data.current.weather_icons[0];
-
           marker.bindPopup(`
             <b>${city.name}</b><br>
             <img src="${icon}" width="40" height="40" /><br>
@@ -44,7 +35,7 @@ cities.forEach(city => {
           `).openPopup();
         }
       })
-      .catch(err => {
+      .catch(() => {
         marker.bindPopup(`<b>${city.name}</b><br>Error fetching weather.`).openPopup();
       });
   });
