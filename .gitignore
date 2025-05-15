@@ -1,15 +1,14 @@
-# Ignore API key config
-js/config.js
+# Environment variables file (API keys, secrets)
+.env
 
-# Ignore node modules if you add any later
-node_modules/
+# Config file if you use one for secrets
+config.js
 
-# Ignore log files
+# OS system files
+.DS_Store
+
+# Logs
 *.log
 
-# Ignore OS files
-.DS_Store
-Thumbs.db
-
-# Ignore environment files if any
-.env
+# Vercel local cache
+.vercel/
