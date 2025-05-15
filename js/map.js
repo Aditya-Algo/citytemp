@@ -1,13 +1,16 @@
-const apiKey = CONFIG.WEATHERSTACK_API_KEY;
+// js/map.js
 
+// Set up the map
 const map = L.map('map').setView([22.9734, 78.6569], 5);
 
+// Add tile layer (OpenStreetMap)
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   maxZoom: 7,
   minZoom: 5,
   attribution: '&copy; OpenStreetMap contributors'
 }).addTo(map);
 
+// List of cities with coordinates
 const cities = [
   { name: 'Delhi', lat: 28.7041, lon: 77.1025 },
   { name: 'Mumbai', lat: 19.0760, lon: 72.8777 },
@@ -16,6 +19,7 @@ const cities = [
   { name: 'Bangalore', lat: 12.9716, lon: 77.5946 },
 ];
 
+// For each city, place a marker and add click event
 cities.forEach(city => {
   const marker = L.marker([city.lat, city.lon]).addTo(map);
 
@@ -31,6 +35,7 @@ cities.forEach(city => {
           const temp = data.current.temperature;
           const desc = data.current.weather_descriptions[0];
           const icon = data.current.weather_icons[0];
+
           marker.bindPopup(`
             <b>${city.name}</b><br>
             <img src="${icon}" width="40" height="40" /><br>
